@@ -48,18 +48,17 @@ class Choice(models.Model):
         return self.text
 
 
-class Complete(models.Model):
+class Reply(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, null=False)
-    date_complete = models.DateTimeField(auto_now_add=True, editable=False, null=False)
+    date_reply = models.DateTimeField(auto_now_add=True, editable=False, null=False)
 
 
 class Answer(models.Model):
-    text = models.CharField(max_length=255)
-    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    text = models.CharField(max_length=255, null=True, blank=True)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE, null=True, blank=True)
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
-    complete = models.ForeignKey(Complete, on_delete=models.CASCADE, null=False, blank=False)
+    reply = models.ForeignKey(Reply, related_name='answers', on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         if self.text:
