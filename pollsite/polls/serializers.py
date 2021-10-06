@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from polls.models import Poll, Question, Choice
+from polls.models import Poll, Question, Choice, Reply, Answer
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -30,3 +30,26 @@ class PollSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'date_start', 'date_end', 'is_active', 'questions')
         read_only_fields = ('id', 'date_start', 'is_active')
 
+
+class AnswerSerializer(serializers.ModelSerializer):
+# Текст иил Вариант ответа на выбор. Поле текста не должно быть requied
+    class Meta:
+        model = Answer
+        fields = ('id', 'text', 'choice_id', 'question_id')
+
+
+class ReplySerializer(serializers.ModelSerializer):
+    answers = AnswerSerializer(many=True)
+
+    class Meta:
+        model = Reply
+        fields = ('id', 'user', 'poll',  'date_reply', 'answers')
+        read_only_fields = ('user',)
+
+    def create(self, validated_data):
+        answers = validated_data.pop('answers', [])
+        instance = Reply.objects.create(**validated_data)
+        Answer.objects.bulk_create([
+            Answer(reply=instance, **a) for a in answers
+        ])
+        return instance
