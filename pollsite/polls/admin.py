@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from django.forms import BaseInlineFormSet
 
-from .models import Poll, Question, Choice
+from .models import Poll, Question, Choice, Reply, Answer
 
 
 class ChoiceInline(admin.TabularInline):
@@ -23,8 +23,6 @@ class QuestionAdmin(ModelAdmin):
     inlines = ChoiceInline,
 
 
-# Register your models here.
-
 @admin.register(Poll)
 class PollAdmin(ModelAdmin):
     fields = ("title", "date_start", "is_active", "date_end", "description")
@@ -32,3 +30,15 @@ class PollAdmin(ModelAdmin):
     inlines = [QuestionInline, ChoiceInline]
 
     list_display = ("title", "date_start", "date_end", "is_active")
+
+
+class AnswersInline(admin.TabularInline):
+    model = Answer
+    extra = 1
+
+@admin.register(Reply)
+class ReplyAdmin(admin.ModelAdmin):
+    fields = ("user", "poll", "date_reply")
+    readonly_fields = ("date_reply",)
+    inlines = (AnswersInline,)
+
