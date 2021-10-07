@@ -2,7 +2,7 @@ from .models import Poll, Question, Reply
 from .serializers import PollSerializer, QuestionSerializer, ReplySerializer
 from .permissions import PollPermission, QuestionPermission
 from rest_framework import viewsets, mixins
-
+from django.contrib.auth.models import User
 
 class PollViewSet(viewsets.ModelViewSet):
     serializer_class = PollSerializer
@@ -37,4 +37,12 @@ class ReplyViewSet(mixins.ListModelMixin,
     def perform_create(self, serializer):
         if self.request.user.is_authenticated:
             return serializer.save(user=self.request.user)
-        serializer.save()
+
+        self.request.session.save()
+        username = str(self.request.session.session_key)
+        try:
+            user = User.objects.create_user(username)
+        except:
+            user = User.objects.get(email=username)
+        return serializer.save(user=user)
+
