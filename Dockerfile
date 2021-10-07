@@ -10,7 +10,7 @@ COPY ./Pipfile.lock /app/
 
 RUN pipenv update
 
-EXPOSE 8000
+#EXPOSE 8000
 
+CMD ["pipenv", "run", "python", "pollsite/manage.py", "migrate"]
 CMD ["pipenv", "run", "python", "pollsite/manage.py", "runserver", "0.0.0.0:8000"]
-#CMD ["python", "surveys/manage.py", "runserver", "8000"]
