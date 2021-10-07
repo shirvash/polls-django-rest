@@ -54,7 +54,7 @@ class Reply(models.Model):
     date_reply = models.DateTimeField(auto_now_add=True, editable=False, null=False)
 
     def __str__(self):
-        return f'{self.user}. {self.poll}'
+        return f'{self.poll}.  {self.user}'
 
 
 class Answer(models.Model):
