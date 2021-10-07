@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY', default="2jqeqy55g96%v$5zl=u_a6c569f=fjsj_l41cfm)zrv-_onhcr")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'drf_yasg',
     'polls',
 ]
 
@@ -86,11 +87,11 @@ WSGI_APPLICATION = 'pollsite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'polls_db',
-        'USER': 'postgres',
-        'PASSWORD': 'pass',
-        'HOST': 'db',
-        'PORT': 5432,
+        'NAME': os.getenv('POSTGRES_NAME', default='polls_db'),
+        'USER': os.getenv('POSTGRES_USER', default='postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='pass'),
+        'HOST': os.getenv('POSTGRES_HOST', default='db'),
+        'PORT': os.getenv('POSTGRES_PORT', default='5432')
     }
 }
 
