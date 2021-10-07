@@ -14,3 +14,4 @@ RUN pipenv update
 
 CMD ["pipenv", "run", "python", "pollsite/manage.py", "migrate"]
 CMD ["pipenv", "run", "python", "pollsite/manage.py", "runserver", "0.0.0.0:8000"]
+
