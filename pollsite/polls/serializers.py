@@ -1,12 +1,13 @@
 from rest_framework import serializers
 
+from polls.fields import ObjectIDField
 from polls.models import Poll, Question, Choice, Reply, Answer
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
-        fields = ('id', 'text')
+        fields = ('id', 'choice_text')
         read_only_fields = ('id',)
 
 
@@ -18,7 +19,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'poll', 'text', 'type', 'choices')
+        fields = ('id', 'poll', 'question_text', 'type', 'choices')
         read_only_fields = ('id',)
 
 
@@ -32,10 +33,16 @@ class PollSerializer(serializers.ModelSerializer):
 
 
 class AnswerSerializer(serializers.ModelSerializer):
-# Текст иил Вариант ответа на выбор. Поле текста не должно быть requied
+    choice = ChoiceSerializer(read_only=True)
+    choice_id = ObjectIDField(queryset=Choice.objects.all(), write_only=True, allow_null=True)
+
+    question = QuestionSerializer(read_only=True)
+    question_id = ObjectIDField(queryset=Question.objects.all(), write_only=True, allow_null=True)
+
     class Meta:
         model = Answer
-        fields = ('id', 'text', 'choice_id', 'question_id')
+        fields = ('id', 'question_id', 'question', 'text', 'choice_id', 'choice')
+        read_only_fields = ('id', 'question', 'choice')
 
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -43,8 +50,8 @@ class ReplySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reply
-        fields = ('id', 'user', 'poll',  'date_reply', 'answers')
-        read_only_fields = ('user',)
+        fields = ('id', 'user', 'poll', 'date_reply', 'answers')
+        read_only_fields = ('id', 'user', 'date_reply')
 
     def create(self, validated_data):
         answers = validated_data.pop('answers', [])
