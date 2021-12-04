@@ -25,8 +25,14 @@ POSTGRES_HOST - Адрес БД
 POSTGRES_PORT - Порт БД
 ```
 ## Запуск
+
+####Локальный запуск
 ```bash
 docker-compose up
+```
+####Запуск на сервере
+```bash
+docker-compose -f docker-compose.production.yml up -d
 ```
 
 ## Администрирование
