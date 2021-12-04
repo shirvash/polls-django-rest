@@ -28,7 +28,7 @@ POSTGRES_PORT - Порт БД
 
 ####Локальный запуск
 ```bash
-docker-compose up
+docker-compose up -d
 ```
 ####Запуск на сервере
 ```bash
