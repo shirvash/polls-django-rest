@@ -36,7 +36,7 @@ http://localhost:8000/admin
 
 ### Создание администратора
 ```bash
-pipenv run python pollsite/manage.py createsuperuser
+pipenv run python backend/manage.py createsuperuser
 ```
 
 ## Документация
