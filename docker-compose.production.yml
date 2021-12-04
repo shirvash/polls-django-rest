@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: polls-db
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+
+  app:
+    container_name: polls-backend
+    build:
+      context: ./backend
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - "db"
+    entrypoint: sh entrypoint.production.sh
+    command: gunicorn config.wsgi:application --preload --bind 0.0.0.0:8000 --reload -w 4
+
+volumes:
+  app:
+  postgresdata:
